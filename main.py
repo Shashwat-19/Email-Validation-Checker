@@ -21,7 +21,6 @@ class EmailValidator:
             'icloud.com'
         }
         
-        # More comprehensive email regex pattern
         self.email_regex = re.compile(
             r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
         )
@@ -41,17 +40,14 @@ class EmailValidator:
         
         email = email.strip().lower()
         
-        # Check email format
         if not self.email_regex.match(email):
             return False, "Invalid email format"
         
-        # Extract domain
         try:
             domain = email.split('@')[1]
         except IndexError:
             return False, "Invalid email format"
         
-        # Check if domain is allowed
         if domain not in self.allowed_domains:
             return False, f"Domain '{domain}' not allowed"
         
@@ -68,8 +64,7 @@ class EmailValidator:
             List of tuples (email, is_valid, message)
         """
         results = []
-        
-        # Split by comma, semicolon, or whitespace
+
         email_list = re.split(r'[,;\s]+', emails.strip())
         
         for email in email_list:
@@ -142,17 +137,14 @@ def main():
             if not user_input:
                 continue
             
-            # Handle exit commands
             if user_input.lower() in ('exit', 'quit'):
                 print("Goodbye!")
                 break
             
-            # Handle help command
             elif user_input.lower() in ('help', '?'):
                 print_help()
                 continue
             
-            # Handle domains list command
             elif user_input.lower() == 'domains':
                 domains = sorted(validator.list_domains())
                 print(f"\nAllowed domains ({len(domains)}):")
@@ -160,7 +152,6 @@ def main():
                     print(f"  • {domain}")
                 continue
             
-            # Handle add domain command
             elif user_input.lower().startswith('add '):
                 domain = user_input[4:].strip()
                 if domain:
@@ -170,7 +161,6 @@ def main():
                     print("Please specify a domain to add")
                 continue
             
-            # Handle remove domain command
             elif user_input.lower().startswith('remove '):
                 domain = user_input[7:].strip()
                 if domain:
@@ -182,8 +172,7 @@ def main():
                 else:
                     print("Please specify a domain to remove")
                 continue
-            
-            # Validate emails
+
             results = validator.validate_batch(user_input)
             print_results(results)
             
